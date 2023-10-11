@@ -1,14 +1,18 @@
 mod cpu;
+mod gpu;
+mod memory;
 mod utils;
 
 use std::{error::Error, process};
 
-use crate::cpu::*;
+// use crate::cpu::*;
+// use crate::gpu::*;
+// use crate::memory::*;
 use crate::utils::*;
 
 use flexi_logger::{detailed_format, Duplicate, FileSpec, Logger};
 // use indicatif::{ProgressBar, ProgressStyle};
-use log::{error, info, warn};
+use log::error;
 use owo_colors::colored::*;
 
 fn main() -> Result<(), Box<dyn Error>> {
@@ -45,10 +49,15 @@ fn main() -> Result<(), Box<dyn Error>> {
         .start()
         .unwrap();
 
-    let mem = cpu::Mem::new();
-    let cpu: cpu::CPU;
-    cpu.reset(mem);
-    // println!("{:?}", );
+    // let data: [u8; 1024] = [0; 1024];
+    let mut data = memory::Mem::new();
+    data.initialize();
+    dbg!(&data);
+    data.reset();
+    dbg!(&data);
+    let mut new_data = gpu::GPU::new(data);
+    new_data.add(10);
+    dbg!(&new_data);
 
     Ok(())
 }
